@@ -106,6 +106,7 @@ class MembersController extends Controller
             } else {
                 return  response()->json(["isSuccess" => "False"]);
             }
+            return  response()->json(["isSuccess" => "True"]);
         }
     }
 
