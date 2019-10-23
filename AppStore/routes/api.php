@@ -33,7 +33,7 @@ Route::POST('/logout', 'MembersController@logout');
 //上傳App(Android)
 Route::POST('/develop/Android', 'DevelopController@ApkUp');
 //上傳App(Ios)
-Route::POST('/develop/Ios', 'DevelopController@IpaUp');
+Route::POST('/develop/Ios', 'DevelopController@IosUp');
 //列出該開發者自己的App download Rank
 Route::GET('/develop/appRank/{id}', 'DevelopController@appRank');
 //自己開發的所有App列表(含審核狀態)

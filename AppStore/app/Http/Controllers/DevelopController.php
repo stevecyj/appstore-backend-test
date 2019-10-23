@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\MembersResource;
 use App\Http\Resources\MembersResourceCollection;
 
-
 class DevelopController extends Controller
 {
     //上傳App(apk)
@@ -30,7 +29,9 @@ class DevelopController extends Controller
             ) {
                 $icon_name = time() . rand(100000, 999999) . '.' . $icon_extension;
                 $icon_path = Storage::url(Storage::putFileAs('public/icon', $icon, $icon_name));
-            } else return response()->json(["isSuccess" => "False", "reason" => "icon extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "icon extension error"]);
+            }
             // //處理apk檔
             $file = $request->file('file');
             $file_extension = $file->getClientOriginalExtension();
@@ -60,8 +61,12 @@ class DevelopController extends Controller
                         'version' => $request->version,
                         'fileURL' => $filepath,
                     ]);
-                } else return response()->json(["isSuccess" => "False", "reason" => "file is not for android"]);
-            } else return response()->json(["isSuccess" => "False", "reason" => "file is unvalid"]);
+                } else {
+                    return response()->json(["isSuccess" => "False", "reason" => "file is not for android"]);
+                }
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "file is unvalid"]);
+            }
             //新增進資料庫後以路徑找到該檔案的Id
             $app = Apps::where('fileURL', $filepath)->firstOrFail();
 
@@ -79,7 +84,9 @@ class DevelopController extends Controller
                         'appId' => $app->id, 'screenShot' =>  $img1path,
                     ]
                 );
-            } else return response()->json(["isSuccess" => "False", "reason" => "img1 extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "img1 extension error"]);
+            }
             //處理截圖2
             $img2 = $request->file('img2');
             $img2_extension = strtolower($img2->getClientOriginalExtension());
@@ -94,9 +101,13 @@ class DevelopController extends Controller
                         'appId' => $app->id, 'screenShot' =>  $img2path,
                     ]
                 );
-            } else return response()->json(["isSuccess" => "False", "reason" => "img2 extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "img2 extension error"]);
+            }
             return response()->json(["isSuccess" => "True"]);
-        } else return response()->json(["isSuccess" => "False", "reason" => "one of the upload is empty"]);
+        } else {
+            return response()->json(["isSuccess" => "False", "reason" => "one of the upload is empty"]);
+        }
     }
 
 
@@ -114,7 +125,9 @@ class DevelopController extends Controller
             ) {
                 $icon_name = time() . rand(100000, 999999) . '.' . $icon_extension;
                 $icon_path = Storage::url(Storage::putFileAs('public/icon', $icon, $icon_name));
-            } else return response()->json(["isSuccess" => "False", "reason" => "icon extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "icon extension error"]);
+            }
             // 處理ios檔
             $file = $request->file('file');
             $plist = $request->file('plist');
@@ -134,7 +147,7 @@ class DevelopController extends Controller
                     'version' => ['required', 'string', 'max:20', 'regex:/^[0-1]\.[0-9]*\.[0-9]$/'],
                 ]);
 
-                if ($file_extension === 'apk') {
+                if ($file_extension === 'ipa') {
                     $filepath = Storage::url(Storage::putFileAs('public/file/ios', $file, $file_name));
                     $plistpath = Storage::url(Storage::putFileAs('public/file/ios', $plist, $plist_name));
                     apps::insert([
@@ -149,10 +162,14 @@ class DevelopController extends Controller
                         'version' => $request->version,
                         'fileURL' => $plistpath,
                     ]);
-                } else return response()->json(["isSuccess" => "False", "reason" => "file is not for android"]);
-            } else return response()->json(["isSuccess" => "False", "reason" => "file is unvalid"]);
+                } else {
+                    return response()->json(["isSuccess" => "False", "reason" => "file is not for android"]);
+                }
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "file is unvalid"]);
+            }
             //新增進資料庫後以路徑找到該檔案的Id
-            $app = Apps::where('fileURL', $filepath)->firstOrFail();
+            $app = Apps::where('fileURL', $plistpath)->firstOrFail();
 
             //處理截圖1
             $img1 = $request->file('img1');
@@ -168,7 +185,9 @@ class DevelopController extends Controller
                         'appId' => $app->id, 'screenShot' =>  $img1path,
                     ]
                 );
-            } else return response()->json(["isSuccess" => "False", "reason" => "img1 extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "img1 extension error"]);
+            }
             //處理截圖2
             $img2 = $request->file('img2');
             $img2_extension = strtolower($img2->getClientOriginalExtension());
@@ -183,9 +202,13 @@ class DevelopController extends Controller
                         'appId' => $app->id, 'screenShot' =>  $img2path,
                     ]
                 );
-            } else return response()->json(["isSuccess" => "False", "reason" => "img2 extension error"]);
+            } else {
+                return response()->json(["isSuccess" => "False", "reason" => "img2 extension error"]);
+            }
             return response()->json(["isSuccess" => "True"]);
-        } else return response()->json(["isSuccess" => "False", "reason" => "one of the upload is empty"]);
+        } else {
+            return response()->json(["isSuccess" => "False", "reason" => "one of the upload is empty"]);
+        }
     }
 
 
@@ -209,12 +232,13 @@ class DevelopController extends Controller
         $count = Apps::where('memberId', '=', $id)->count();
         $appList = Apps::where('memberId', '=', $id)->select('id', 'appName', 'summary', 'created_at', 'verify')->get();
         for ($i = 0; $i < $count; $i++) {
-            if ($appList[$i]->verify === 3)
+            if ($appList[$i]->verify === 3) {
                 $appList[$i]->verify = '待審核';
-            else if ($appList[$i]->verify === 2)
+            } elseif ($appList[$i]->verify === 2) {
                 $appList[$i]->verify = '退回';
-            else if ($appList[$i]->verify === 1)
+            } elseif ($appList[$i]->verify === 1) {
                 $appList[$i]->verify = '審核通過';
+            }
         }
         return $appList;
     }

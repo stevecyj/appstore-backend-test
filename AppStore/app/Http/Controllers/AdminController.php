@@ -196,13 +196,7 @@ class AdminController extends Controller
     {
         $count = Members::count();
         $List = Members::where('level', '<', 3)->select('id', 'name', 'phone', 'email', 'level', 'permission')->get();
-        for ($i = 0; $i < $count; $i++) {
-            if ($List[$i]->level === 2) { //開發者
-                $List[$i]->level = '是';
-            } elseif ($List[$i]->level === 1) {
-                $List[$i]->level = '否';
-            }
-        }
+        
         return $List;
     }
 
@@ -221,13 +215,13 @@ class AdminController extends Controller
             Members::where('id', '=', $id)->update(['permission' => 0]);
             $count = Members::count();
             $List = Members::where('level', '<', 3)->select('id', 'name', 'phone', 'email', 'level', 'permission')->get();
-            for ($i = 0; $i < $count; $i++) {
-                if ($List[$i]->level === 2) { //開發者
-                    $List[$i]->level = '是';
-                } elseif ($List[$i]->level === 1) {
-                    $List[$i]->level = '否';
-                }
-            }
+            // for ($i = 0; $i < $count; $i++) {
+            //     if ($List[$i]->level === 2) { //開發者
+            //         $List[$i]->level = '是';
+            //     } elseif ($List[$i]->level === 1) {
+            //         $List[$i]->level = '否';
+            //     }
+            // }
             return $List;
         } else {
             return response()->json(["isSuccess" => "False", "reason" => "Member not found"]);
@@ -242,13 +236,13 @@ class AdminController extends Controller
             Members::where('id', '=', $id)->update(['permission' => 1]);
             $count = Members::count();
             $List = Members::where('level', '<', 3)->select('id', 'name', 'phone', 'email', 'level', 'permission')->get();
-            for ($i = 0; $i < $count; $i++) {
-                if ($List[$i]->level === 2) { //開發者
-                    $List[$i]->level = '是';
-                } elseif ($List[$i]->level === 1) {
-                    $List[$i]->level = '否';
-                }
-            }
+            // for ($i = 0; $i < $count; $i++) {
+            //     if ($List[$i]->level === 2) { //開發者
+            //         $List[$i]->level = '是';
+            //     } elseif ($List[$i]->level === 1) {
+            //         $List[$i]->level = '否';
+            //     }
+            // }
             return $List;
         } else {
             return response()->json(["isSuccess" => "False", "reason" => "Member not found"]);
